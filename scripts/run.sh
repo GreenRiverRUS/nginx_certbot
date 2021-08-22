@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-nginx -t 1>&2 2>/dev/null || /bin/init.sh "$@"
+/bin/init.sh "$@"
 while :; do
     echo "Checking certificates for renewal..."
     certbot renew --deploy-hook "nginx -s reload"

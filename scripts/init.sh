@@ -1,6 +1,16 @@
 #!/bin/sh
 set -e
 
+mkdir -p "/var/www/certbot"
+
+echo "Checking nginx..."
+if nginx -t 1>&2 2>/dev/null; then
+    echo "Ok. Exiting init script..."
+    exit 0
+else
+    echo "Fail. Starting full procedure..."
+fi
+
 echo "Initializing nginx..."
 echo "$LETSENCRYPT_DOMAINS"
 
@@ -9,7 +19,6 @@ domain_args=""
 for domain in $LETSENCRYPT_DOMAINS; do
     cert_path="/etc/letsencrypt/live/$domain"
     mkdir -p "$cert_path"
-    mkdir -p "/var/www/certbot"
     domain_args="$domain_args -d $domain"
 
     openssl req -x509 -nodes -newkey rsa:1024 -days 1\
